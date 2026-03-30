@@ -219,6 +219,20 @@
       background: var(--accent); margin-top: 9px; flex-shrink: 0;
     }
 
+    /* ── Architecture diagram ── */
+    .arch-diagram {
+      font-family: 'Courier New', Consolas, monospace;
+      font-size: 12px;
+      line-height: 1.5;
+      color: var(--text);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      overflow-x: auto;
+      white-space: pre;
+    }
+
     /* ── Education ── */
     .edu-degree { font-size: 26px; font-weight: 700; margin-bottom: 8px; }
     .edu-institution { font-size: 17px; color: var(--text-muted); margin-bottom: 4px; }
@@ -320,6 +334,17 @@
       `;
     }
 
+    function buildArchDiagramSlide(exp) {
+      return `
+        <div class="slide-label">Experience &rsaquo; Architecture</div>
+        <div class="exp-header">
+          <div class="exp-company">${exp.company}</div>
+          <div class="exp-role">System Architecture</div>
+        </div>
+        <pre class="arch-diagram">${exp.diagram}</pre>
+      `;
+    }
+
     function buildEducationSlide(education) {
       const entries = education.map(e => `
         <div class="edu-degree">${e.degree}</div>
@@ -345,6 +370,9 @@
       data.experience.forEach(exp => {
         slides.push({ navLabel: 'Overview', section: exp.company, isChild: true, html: buildExpSummarySlide(exp) });
         slides.push({ navLabel: 'Detail',   section: exp.company, isChild: true, html: buildExpDetailSlide(exp) });
+        if (exp.diagram) {
+          slides.push({ navLabel: 'Architecture', section: exp.company, isChild: true, html: buildArchDiagramSlide(exp) });
+        }
       });
 
       if (data.education && data.education.length) {

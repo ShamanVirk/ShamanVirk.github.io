@@ -88,16 +88,59 @@ const PORTFOLIO = {
       role: "Senior Software Engineer",
       context: "Consultant at Comcast Business",
       period: "Sep 2018 – Dec 2019",
-      stack: ["Java", "Spring Boot", "Spring Cloud Streams", "RabbitMQ", "MS Azure", "PCF"],
+      stack: ["Java", "Spring Boot", "Spring Cloud Streams", "Angular 8/7", "OpenID Connect", "SQL Server", "Flyway", "PCF", "Concourse CI"],
       summary: [
-        "Microservices architecture migration and automation platform for enterprise managed services"
+        "Microservices migration of a monolithic enterprise managed services platform for Comcast Business"
       ],
       detail: [
-        "Led microservices migration from monolithic architecture",
-        "Built automation platform for enterprise managed services workflows",
-        "Worked with Spring Cloud Streams and RabbitMQ for event-driven processing",
-        "Deployed on Microsoft Azure and Pivotal Cloud Foundry"
-      ]
+        "Led microservices migration — decomposed a monolithic application into independent Spring Boot services",
+        "Introduced OpenID Connect for SSO login across both the web portal and field technician app",
+        "Extracted command-api as a shared library consumed by both server-side services and the field tech app",
+        "Managed database schema evolution with Flyway on SQL Server; deployed on PCF with Concourse CI pipelines"
+      ],
+      diagram: `  BEFORE                    AFTER
+
+  ┌──────────────────┐        Web Portal (Angular 8)        Field Tech App (Angular 7)
+  │    Monolith      │               │                               │
+  │  ──────────────  │  ──────►      │                       ┌───────┴──────────────┐
+  │  sites · clients │               │                       │   ft-app-server      │
+  │  commands · logs │               │                       │   [command-api-lib]  │
+  │  reports · auth  │               │                       │   executes commands  │
+  └──────────────────┘               │                       └───────┬──────────────┘
+                                     │    OpenID Connect SSO         │
+                                     └──────────────┬────────────────┘
+                                                    │
+                                                    ▼
+                                       ┌────────────────────────┐
+                                       │   API Gateway          │
+                                       └──┬──────┬──────┬───────┘
+                                          │      │      │
+                              ┌───────────┘      │      └─────────────┐
+                              ▼                  ▼                    ▼
+                 ┌─────────────────────┐  ┌─────────────┐  ┌───────────────────┐
+                 │   command-api       │  │   ft-api    │  │  + other services │
+                 │  ┌───────────────┐  │  │             │  └───────────────────┘
+                 │  │command-api-lib│  │  └──────┬──────┘  
+                 │  └───────────────┘  │         │         
+                 └────────┬────────────┘         │         
+                          │ results              │ calls
+                          └──────────────┬───────┘
+                                         ▼
+                                 ┌─────────────────┐
+                                 │    log-api      │
+                                 └────────┬────────┘
+                                          │
+                                          ▼
+                                 ┌──────────────────────┐
+                                 │  SQL Server · Flyway │
+                                 └──────────────────────┘
+
+  ┌──────────────────────────────── Shared Library   ──────────────────────────────────┐
+  │  command-api-lib            used by: command-api (server) + ft-app-server (field)  │
+  │  └─ Core command execution engine · results pushed to log-api or ft-api            │
+  └────────────────────────────────────────────────────────────────────────────────────┘
+
+  ● PCF (Pivotal Cloud Foundry)    ● Concourse CI    ● SonarQube`
     },
     {
       company: "Focusteck",
