@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ahmad Shaman Virk — Portfolio</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --accent: #3b82f6;
+      --accent-light: #eff6ff;
+      --bg: #ffffff;
+      --surface: #f8fafc;
+      --border: #e2e8f0;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --radius: 8px;
+      --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Top bar ── */
+    #topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 28px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+      flex-shrink: 0;
+    }
+    #topbar .name { font-size: 15px; font-weight: 600; color: var(--text); }
+    #nav {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    #nav button {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      width: 34px; height: 34px;
+      cursor: pointer;
+      font-size: 16px;
+      color: var(--text-muted);
+      transition: all 0.15s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    #nav button:hover:not(:disabled) {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+    #nav button:disabled { opacity: 0.3; cursor: default; }
+    #slide-counter { font-size: 13px; color: var(--text-muted); min-width: 52px; text-align: center; }
+
+    /* ── Slide container ── */
+    #slides-wrapper {
+      flex: 1;
+      overflow: hidden;
+      position: relative;
+    }
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 48px 80px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+      overflow-y: auto;
+    }
+    .slide.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .slide-inner {
+      width: 100%;
+      max-width: 820px;
+    }
+
+    /* ── Slide label ── */
+    .slide-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+
+    /* ── Bio slide ── */
+    .bio-name {
+      font-size: 44px;
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 6px;
+    }
+    .bio-title {
+      font-size: 20px;
+      color: var(--text-muted);
+      margin-bottom: 28px;
+    }
+    .bio-divider {
+      width: 48px;
+      height: 3px;
+      background: var(--accent);
+      border-radius: 2px;
+      margin-bottom: 28px;
+    }
+    .bio-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px 32px;
+      margin-bottom: 32px;
+    }
+    .bio-meta a, .bio-meta span {
+      font-size: 15px;
+      color: var(--text-muted);
+      text-decoration: none;
+    }
+    .bio-meta a:hover { color: var(--accent); }
+    .bio-meta .icon { margin-right: 6px; }
+    .cv-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--accent);
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: var(--radius);
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.15s;
+    }
+    .cv-btn:hover { background: #2563eb; }
+
+    /* ── Highlights slide ── */
+    .slide-title {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 32px;
+    }
+    .highlight-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .highlight-list li {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--text);
+    }
+    .highlight-list li::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      margin-top: 10px;
+      flex-shrink: 0;
+    }
+
+    /* ── Skills slide ── */
+    .skills-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .skill-row {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+    .skill-category {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      width: 180px;
+      flex-shrink: 0;
+      padding-top: 4px;
+    }
+    .skill-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .pill {
+      background: var(--accent-light);
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 500;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid #bfdbfe;
+    }
+
+    /* ── Experience slides ── */
+    .exp-header {
+      margin-bottom: 28px;
+    }
+    .exp-company {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .exp-role {
+      font-size: 17px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+    .exp-period {
+      font-size: 14px;
+      color: var(--accent);
+      font-weight: 600;
+    }
+    .exp-stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 16px;
+    }
+    .tag {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 12px;
+      padding: 3px 10px;
+      border-radius: 999px;
+    }
+    .exp-bullets {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .exp-bullets li {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+    .exp-bullets li::before {
+      content: '';
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--accent);
+      margin-top: 10px;
+      flex-shrink: 0;
+    }
+
+    /* ── Progress dots ── */
+    #dots {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      padding: 12px;
+      flex-shrink: 0;
+    }
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--border);
+      transition: background 0.2s, transform 0.2s;
+      cursor: pointer;
+    }
+    .dot.active {
+      background: var(--accent);
+      transform: scale(1.4);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 640px) {
+      .slide { padding: 32px 24px; }
+      .bio-name { font-size: 32px; }
+      .slide-title { font-size: 24px; }
+      .skill-row { flex-direction: column; gap: 6px; }
+      .skill-category { width: auto; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="topbar">
+    <span class="name" id="topbar-name"></span>
+    <div id="nav">
+      <button id="btn-prev" title="Previous (←)">&#8592;</button>
+      <span id="slide-counter"></span>
+      <button id="btn-next" title="Next (→)">&#8594;</button>
+    </div>
+  </div>
+
+  <div id="slides-wrapper"></div>
+
+  <div id="dots"></div>
+
+  <script src="data.js"></script>
+  <script>
+    // ── Slide builders ──────────────────────────────────────────────
+
+    function buildBioSlide(bio) {
+      return `
+        <div class="slide-label">Profile</div>
+        <div class="bio-name">${bio.name}</div>
+        <div class="bio-title">${bio.title} &middot; ${bio.experience}</div>
+        <div class="bio-divider"></div>
+        <div class="bio-meta">
+          <span><span class="icon">📍</span>${bio.location}</span>
+          <a href="mailto:${bio.email}"><span class="icon">✉</span>${bio.email}</a>
+          <a href="tel:${bio.phone}"><span class="icon">📞</span>${bio.phone}</a>
+          <a href="${bio.linkedin}" target="_blank" rel="noopener"><span class="icon">🔗</span>LinkedIn</a>
+          <span><span class="icon">🌐</span>${bio.languages.join(', ')}</span>
+        </div>
+        <a class="cv-btn" href="${bio.cvDownload}" download>
+          &#8595; Download CV
+        </a>
+      `;
+    }
+
+    function buildHighlightsSlide(highlights) {
+      const items = highlights.map(h => `<li>${h}</li>`).join('');
+      return `
+        <div class="slide-label">Overview</div>
+        <div class="slide-title">Career Highlights</div>
+        <ul class="highlight-list">${items}</ul>
+      `;
+    }
+
+    function buildSkillsSlide(skills) {
+      const rows = skills.map(s => `
+        <div class="skill-row">
+          <div class="skill-category">${s.category}</div>
+          <div class="skill-pills">${s.items.map(i => `<span class="pill">${i}</span>`).join('')}</div>
+        </div>
+      `).join('');
+      return `
+        <div class="slide-label">Expertise</div>
+        <div class="slide-title">Technical Skills</div>
+        <div class="skills-grid">${rows}</div>
+      `;
+    }
+
+    function buildExpSummarySlide(exp) {
+      const bullets = exp.summary.map(b => `<li>${b}</li>`).join('');
+      const stack = exp.stack.map(s => `<span class="tag">${s}</span>`).join('');
+      const context = exp.context ? `<div class="exp-role">${exp.context}</div>` : '';
+      return `
+        <div class="slide-label">Experience</div>
+        <div class="exp-header">
+          <div class="exp-company">${exp.company}</div>
+          <div class="exp-role">${exp.role}</div>
+          ${context}
+          <div class="exp-period">${exp.period}</div>
+          <div class="exp-stack">${stack}</div>
+        </div>
+        <ul class="exp-bullets">${bullets}</ul>
+      `;
+    }
+
+    function buildExpDetailSlide(exp) {
+      const bullets = exp.detail.map(b => `<li>${b}</li>`).join('');
+      return `
+        <div class="slide-label">Experience · Detail</div>
+        <div class="exp-header">
+          <div class="exp-company">${exp.company}</div>
+          <div class="exp-role">${exp.role} &middot; ${exp.period}</div>
+        </div>
+        <ul class="exp-bullets">${bullets}</ul>
+      `;
+    }
+
+    // ── Build all slides from data ──────────────────────────────────
+
+    function buildSlides(data) {
+      const slides = [];
+
+      slides.push({ label: 'Bio',              html: buildBioSlide(data.bio) });
+      slides.push({ label: 'Highlights',       html: buildHighlightsSlide(data.highlights) });
+      slides.push({ label: 'Skills',           html: buildSkillsSlide(data.skills) });
+
+      data.experience.forEach(exp => {
+        slides.push({ label: exp.company + ' ›',  html: buildExpSummarySlide(exp) });
+        slides.push({ label: exp.company + ' ››', html: buildExpDetailSlide(exp) });
+      });
+
+      return slides;
+    }
+
+    // ── Render ──────────────────────────────────────────────────────
+
+    const slides = buildSlides(PORTFOLIO);
+    let current = 0;
+
+    const wrapper   = document.getElementById('slides-wrapper');
+    const dotsEl    = document.getElementById('dots');
+    const counter   = document.getElementById('slide-counter');
+    const btnPrev   = document.getElementById('btn-prev');
+    const btnNext   = document.getElementById('btn-next');
+    const topName   = document.getElementById('topbar-name');
+
+    topName.textContent = PORTFOLIO.bio.name;
+
+    // Create slide elements
+    slides.forEach((s, i) => {
+      const el = document.createElement('div');
+      el.className = 'slide' + (i === 0 ? ' active' : '');
+      el.innerHTML = `<div class="slide-inner">${s.html}</div>`;
+      wrapper.appendChild(el);
+    });
+
+    // Create dots
+    slides.forEach((_, i) => {
+      const d = document.createElement('div');
+      d.className = 'dot' + (i === 0 ? ' active' : '');
+      d.addEventListener('click', () => goTo(i));
+      dotsEl.appendChild(d);
+    });
+
+    function goTo(n) {
+      const els  = wrapper.querySelectorAll('.slide');
+      const dots = dotsEl.querySelectorAll('.dot');
+      els[current].classList.remove('active');
+      dots[current].classList.remove('active');
+      current = n;
+      els[current].classList.add('active');
+      dots[current].classList.add('active');
+      counter.textContent = `${current + 1} / ${slides.length}`;
+      btnPrev.disabled = current === 0;
+      btnNext.disabled = current === slides.length - 1;
+    }
+
+    btnPrev.addEventListener('click', () => { if (current > 0) goTo(current - 1); });
+    btnNext.addEventListener('click', () => { if (current < slides.length - 1) goTo(current + 1); });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowLeft'  && current > 0)               goTo(current - 1);
+      if (e.key === 'ArrowRight' && current < slides.length - 1) goTo(current + 1);
+    });
+
+    goTo(0); // init
+  </script>
+</body>
+</html>
