@@ -8,14 +8,18 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --accent: #3b82f6;
+      --accent:       #3b82f6;
       --accent-light: #eff6ff;
-      --bg: #ffffff;
-      --surface: #f8fafc;
-      --border: #e2e8f0;
-      --text: #0f172a;
-      --text-muted: #64748b;
-      --radius: 8px;
+      --accent-dark:  #2563eb;
+      --bg:           #ffffff;
+      --surface:      #f8fafc;
+      --sidebar-bg:   #f1f5f9;
+      --border:       #e2e8f0;
+      --text:         #0f172a;
+      --text-muted:   #64748b;
+      --radius:       8px;
+      --sidebar-w:    220px;
+      --topbar-h:     52px;
       --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
     }
 
@@ -31,27 +35,25 @@
 
     /* ── Top bar ── */
     #topbar {
+      height: var(--topbar-h);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 12px 28px;
+      padding: 0 20px;
       border-bottom: 1px solid var(--border);
       background: var(--bg);
       flex-shrink: 0;
+      z-index: 10;
     }
-    #topbar .name { font-size: 15px; font-weight: 600; color: var(--text); }
-    #nav {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
+    #topbar .name { font-size: 14px; font-weight: 600; color: var(--text); }
+    #nav { display: flex; align-items: center; gap: 10px; }
     #nav button {
       background: none;
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      width: 34px; height: 34px;
+      width: 32px; height: 32px;
       cursor: pointer;
-      font-size: 16px;
+      font-size: 15px;
       color: var(--text-muted);
       transition: all 0.15s;
       display: flex; align-items: center; justify-content: center;
@@ -62,9 +64,70 @@
       color: #fff;
     }
     #nav button:disabled { opacity: 0.3; cursor: default; }
-    #slide-counter { font-size: 13px; color: var(--text-muted); min-width: 52px; text-align: center; }
+    #slide-counter { font-size: 12px; color: var(--text-muted); min-width: 48px; text-align: center; }
 
-    /* ── Slide container ── */
+    /* ── Body layout: sidebar + content ── */
+    #body {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+    }
+
+    /* ── Sidebar ── */
+    #sidebar {
+      width: var(--sidebar-w);
+      flex-shrink: 0;
+      background: var(--sidebar-bg);
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+      padding: 8px 0 16px;
+    }
+    .nav-section-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: 14px 16px 4px;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      padding: 6px 14px 6px 16px;
+      cursor: pointer;
+      font-size: 13px;
+      color: var(--text-muted);
+      border-left: 2px solid transparent;
+      transition: all 0.12s;
+      user-select: none;
+      gap: 6px;
+    }
+    .nav-item:hover { background: #e2e8f0; color: var(--text); }
+    .nav-item.active {
+      background: var(--accent-light);
+      color: var(--accent-dark);
+      border-left-color: var(--accent);
+      font-weight: 600;
+    }
+    .nav-item.child {
+      padding-left: 28px;
+      font-size: 12px;
+    }
+    .nav-badge {
+      margin-left: auto;
+      font-size: 10px;
+      background: var(--border);
+      border-radius: 999px;
+      padding: 1px 6px;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+    .nav-item.active .nav-badge {
+      background: #bfdbfe;
+      color: var(--accent-dark);
+    }
+
+    /* ── Slide content area ── */
     #slides-wrapper {
       flex: 1;
       overflow: hidden;
@@ -77,227 +140,97 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: 48px 80px;
+      padding: 40px 72px;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.25s ease;
+      transition: opacity 0.22s ease;
       overflow-y: auto;
     }
-    .slide.active {
-      opacity: 1;
-      pointer-events: all;
-    }
-    .slide-inner {
-      width: 100%;
-      max-width: 820px;
-    }
+    .slide.active { opacity: 1; pointer-events: all; }
+    .slide-inner { width: 100%; max-width: 780px; }
 
     /* ── Slide label ── */
     .slide-label {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 12px;
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 10px;
     }
 
-    /* ── Bio slide ── */
-    .bio-name {
-      font-size: 44px;
-      font-weight: 700;
-      line-height: 1.1;
-      margin-bottom: 6px;
-    }
-    .bio-title {
-      font-size: 20px;
-      color: var(--text-muted);
-      margin-bottom: 28px;
-    }
-    .bio-divider {
-      width: 48px;
-      height: 3px;
-      background: var(--accent);
-      border-radius: 2px;
-      margin-bottom: 28px;
-    }
-    .bio-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 16px 32px;
-      margin-bottom: 32px;
-    }
-    .bio-meta a, .bio-meta span {
-      font-size: 15px;
-      color: var(--text-muted);
-      text-decoration: none;
-    }
+    /* ── Bio ── */
+    .bio-name { font-size: 42px; font-weight: 700; line-height: 1.1; margin-bottom: 6px; }
+    .bio-title { font-size: 19px; color: var(--text-muted); margin-bottom: 24px; }
+    .bio-divider { width: 44px; height: 3px; background: var(--accent); border-radius: 2px; margin-bottom: 24px; }
+    .bio-meta { display: flex; flex-wrap: wrap; gap: 12px 28px; margin-bottom: 28px; }
+    .bio-meta a, .bio-meta span { font-size: 14px; color: var(--text-muted); text-decoration: none; }
     .bio-meta a:hover { color: var(--accent); }
-    .bio-meta .icon { margin-right: 6px; }
     .cv-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--accent);
-      color: #fff;
-      padding: 12px 24px;
-      border-radius: var(--radius);
-      font-size: 14px;
-      font-weight: 600;
-      text-decoration: none;
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--accent); color: #fff;
+      padding: 11px 22px; border-radius: var(--radius);
+      font-size: 14px; font-weight: 600; text-decoration: none;
       transition: background 0.15s;
     }
-    .cv-btn:hover { background: #2563eb; }
+    .cv-btn:hover { background: var(--accent-dark); }
 
-    /* ── Highlights slide ── */
-    .slide-title {
-      font-size: 32px;
-      font-weight: 700;
-      margin-bottom: 32px;
-    }
-    .highlight-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
+    /* ── Highlights ── */
+    .slide-title { font-size: 30px; font-weight: 700; margin-bottom: 28px; }
+    .highlight-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
     .highlight-list li {
-      display: flex;
-      gap: 14px;
-      align-items: flex-start;
-      font-size: 16px;
-      line-height: 1.6;
-      color: var(--text);
+      display: flex; gap: 12px; align-items: flex-start;
+      font-size: 15px; line-height: 1.6;
     }
     .highlight-list li::before {
-      content: '';
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--accent);
-      margin-top: 10px;
-      flex-shrink: 0;
+      content: ''; width: 6px; height: 6px; border-radius: 50%;
+      background: var(--accent); margin-top: 9px; flex-shrink: 0;
     }
 
-    /* ── Skills slide ── */
-    .skills-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-    .skill-row {
-      display: flex;
-      gap: 16px;
-      align-items: flex-start;
-    }
+    /* ── Skills ── */
+    .skills-grid { display: flex; flex-direction: column; gap: 14px; }
+    .skill-row { display: flex; gap: 14px; align-items: flex-start; }
     .skill-category {
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      width: 180px;
-      flex-shrink: 0;
-      padding-top: 4px;
+      font-size: 11px; font-weight: 700; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: 0.05em;
+      width: 170px; flex-shrink: 0; padding-top: 5px;
     }
-    .skill-pills {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
+    .skill-pills { display: flex; flex-wrap: wrap; gap: 5px; }
     .pill {
-      background: var(--accent-light);
-      color: var(--accent);
-      font-size: 13px;
-      font-weight: 500;
-      padding: 4px 10px;
-      border-radius: 999px;
-      border: 1px solid #bfdbfe;
+      background: var(--accent-light); color: var(--accent);
+      font-size: 12px; font-weight: 500; padding: 3px 10px;
+      border-radius: 999px; border: 1px solid #bfdbfe;
     }
 
-    /* ── Experience slides ── */
-    .exp-header {
-      margin-bottom: 28px;
-    }
-    .exp-company {
-      font-size: 32px;
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
-    .exp-role {
-      font-size: 17px;
-      color: var(--text-muted);
-      margin-bottom: 4px;
-    }
-    .exp-period {
-      font-size: 14px;
-      color: var(--accent);
-      font-weight: 600;
-    }
-    .exp-stack {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 16px;
-    }
+    /* ── Experience ── */
+    .exp-header { margin-bottom: 24px; }
+    .exp-company { font-size: 30px; font-weight: 700; margin-bottom: 4px; }
+    .exp-role { font-size: 16px; color: var(--text-muted); margin-bottom: 3px; }
+    .exp-period { font-size: 13px; color: var(--accent); font-weight: 600; }
+    .exp-stack { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 14px; }
     .tag {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      color: var(--text-muted);
-      font-size: 12px;
-      padding: 3px 10px;
-      border-radius: 999px;
+      background: var(--surface); border: 1px solid var(--border);
+      color: var(--text-muted); font-size: 11px; padding: 2px 9px; border-radius: 999px;
     }
-    .exp-bullets {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
+    .exp-bullets { list-style: none; display: flex; flex-direction: column; gap: 10px; }
     .exp-bullets li {
-      display: flex;
-      gap: 14px;
-      align-items: flex-start;
-      font-size: 15px;
-      line-height: 1.6;
+      display: flex; gap: 12px; align-items: flex-start;
+      font-size: 14px; line-height: 1.6;
     }
     .exp-bullets li::before {
-      content: '';
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-      background: var(--accent);
-      margin-top: 10px;
-      flex-shrink: 0;
+      content: ''; width: 5px; height: 5px; border-radius: 50%;
+      background: var(--accent); margin-top: 9px; flex-shrink: 0;
     }
 
-    /* ── Progress dots ── */
-    #dots {
-      display: flex;
-      justify-content: center;
-      gap: 6px;
-      padding: 12px;
-      flex-shrink: 0;
-    }
-    .dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--border);
-      transition: background 0.2s, transform 0.2s;
-      cursor: pointer;
-    }
-    .dot.active {
-      background: var(--accent);
-      transform: scale(1.4);
-    }
+    /* ── Education ── */
+    .edu-degree { font-size: 26px; font-weight: 700; margin-bottom: 8px; }
+    .edu-institution { font-size: 17px; color: var(--text-muted); margin-bottom: 4px; }
+    .edu-meta { font-size: 13px; color: var(--accent); font-weight: 600; }
 
     /* ── Responsive ── */
-    @media (max-width: 640px) {
-      .slide { padding: 32px 24px; }
-      .bio-name { font-size: 32px; }
-      .slide-title { font-size: 24px; }
-      .skill-row { flex-direction: column; gap: 6px; }
+    @media (max-width: 700px) {
+      #sidebar { display: none; }
+      .slide { padding: 28px 20px; }
+      .bio-name { font-size: 28px; }
+      .slide-title { font-size: 22px; }
+      .skill-row { flex-direction: column; gap: 4px; }
       .skill-category { width: auto; }
     }
   </style>
@@ -307,15 +240,16 @@
   <div id="topbar">
     <span class="name" id="topbar-name"></span>
     <div id="nav">
-      <button id="btn-prev" title="Previous (←)">&#8592;</button>
+      <button id="btn-prev" title="Previous (&#8592;)">&#8592;</button>
       <span id="slide-counter"></span>
-      <button id="btn-next" title="Next (→)">&#8594;</button>
+      <button id="btn-next" title="Next (&#8594;)">&#8594;</button>
     </div>
   </div>
 
-  <div id="slides-wrapper"></div>
-
-  <div id="dots"></div>
+  <div id="body">
+    <nav id="sidebar"></nav>
+    <div id="slides-wrapper"></div>
+  </div>
 
   <script src="data.js"></script>
   <script>
@@ -328,24 +262,21 @@
         <div class="bio-title">${bio.title} &middot; ${bio.experience}</div>
         <div class="bio-divider"></div>
         <div class="bio-meta">
-          <span><span class="icon">📍</span>${bio.location}</span>
-          <a href="mailto:${bio.email}"><span class="icon">✉</span>${bio.email}</a>
-          <a href="tel:${bio.phone}"><span class="icon">📞</span>${bio.phone}</a>
-          <a href="${bio.linkedin}" target="_blank" rel="noopener"><span class="icon">🔗</span>LinkedIn</a>
-          <span><span class="icon">🌐</span>${bio.languages.join(', ')}</span>
+          <span>&#128205; ${bio.location}</span>
+          <a href="mailto:${bio.email}">&#9993; ${bio.email}</a>
+          <a href="tel:${bio.phone}">&#128222; ${bio.phone}</a>
+          <a href="${bio.linkedin}" target="_blank" rel="noopener">&#128279; LinkedIn</a>
+          <span>&#127760; ${bio.languages.join(', ')}</span>
         </div>
-        <a class="cv-btn" href="${bio.cvDownload}" download>
-          &#8595; Download CV
-        </a>
+        <a class="cv-btn" href="${bio.cvDownload}" download>&#8595; Download CV</a>
       `;
     }
 
     function buildHighlightsSlide(highlights) {
-      const items = highlights.map(h => `<li>${h}</li>`).join('');
       return `
         <div class="slide-label">Overview</div>
         <div class="slide-title">Career Highlights</div>
-        <ul class="highlight-list">${items}</ul>
+        <ul class="highlight-list">${highlights.map(h => `<li>${h}</li>`).join('')}</ul>
       `;
     }
 
@@ -364,29 +295,36 @@
     }
 
     function buildExpSummarySlide(exp) {
-      const bullets = exp.summary.map(b => `<li>${b}</li>`).join('');
-      const stack = exp.stack.map(s => `<span class="tag">${s}</span>`).join('');
       const context = exp.context ? `<div class="exp-role">${exp.context}</div>` : '';
       return `
-        <div class="slide-label">Experience</div>
+        <div class="slide-label">Experience &rsaquo; Overview</div>
         <div class="exp-header">
           <div class="exp-company">${exp.company}</div>
           <div class="exp-role">${exp.role}</div>
           ${context}
           <div class="exp-period">${exp.period}</div>
-          <div class="exp-stack">${stack}</div>
+          <div class="exp-stack">${exp.stack.map(s => `<span class="tag">${s}</span>`).join('')}</div>
         </div>
-        <ul class="exp-bullets">${bullets}</ul>
+        <ul class="exp-bullets">${exp.summary.map(b => `<li>${b}</li>`).join('')}</ul>
+      `;
+    }
+
+    function buildExpDetailSlide(exp) {
+      return `
+        <div class="slide-label">Experience &rsaquo; Detail</div>
+        <div class="exp-header">
+          <div class="exp-company">${exp.company}</div>
+          <div class="exp-role">${exp.role} &middot; ${exp.period}</div>
+        </div>
+        <ul class="exp-bullets">${exp.detail.map(b => `<li>${b}</li>`).join('')}</ul>
       `;
     }
 
     function buildEducationSlide(education) {
       const entries = education.map(e => `
-        <div class="exp-header">
-          <div class="exp-company">${e.degree}</div>
-          <div class="exp-role">${e.institution}</div>
-          <div class="exp-period">${e.location} &middot; ${e.year}</div>
-        </div>
+        <div class="edu-degree">${e.degree}</div>
+        <div class="edu-institution">${e.institution}</div>
+        <div class="edu-meta">${e.location} &middot; ${e.year}</div>
       `).join('');
       return `
         <div class="slide-label">Education</div>
@@ -395,54 +333,76 @@
       `;
     }
 
-    function buildExpDetailSlide(exp) {
-      const bullets = exp.detail.map(b => `<li>${b}</li>`).join('');
-      return `
-        <div class="slide-label">Experience · Detail</div>
-        <div class="exp-header">
-          <div class="exp-company">${exp.company}</div>
-          <div class="exp-role">${exp.role} &middot; ${exp.period}</div>
-        </div>
-        <ul class="exp-bullets">${bullets}</ul>
-      `;
-    }
-
-    // ── Build all slides from data ──────────────────────────────────
+    // ── Build slides array from data ────────────────────────────────
 
     function buildSlides(data) {
       const slides = [];
 
-      slides.push({ label: 'Bio',              html: buildBioSlide(data.bio) });
-      slides.push({ label: 'Highlights',       html: buildHighlightsSlide(data.highlights) });
-      slides.push({ label: 'Skills',           html: buildSkillsSlide(data.skills) });
+      slides.push({ navLabel: 'Bio',              section: 'Profile',    isChild: false, html: buildBioSlide(data.bio) });
+      slides.push({ navLabel: 'Career Highlights', section: null,         isChild: false, html: buildHighlightsSlide(data.highlights) });
+      slides.push({ navLabel: 'Technical Skills',  section: null,         isChild: false, html: buildSkillsSlide(data.skills) });
 
       data.experience.forEach(exp => {
-        slides.push({ label: exp.company + ' ›',  html: buildExpSummarySlide(exp) });
-        slides.push({ label: exp.company + ' ››', html: buildExpDetailSlide(exp) });
+        slides.push({ navLabel: 'Overview', section: exp.company, isChild: true, html: buildExpSummarySlide(exp) });
+        slides.push({ navLabel: 'Detail',   section: exp.company, isChild: true, html: buildExpDetailSlide(exp) });
       });
 
       if (data.education && data.education.length) {
-        slides.push({ label: 'Education', html: buildEducationSlide(data.education) });
+        slides.push({ navLabel: 'Education', section: 'Education', isChild: false, html: buildEducationSlide(data.education) });
       }
 
       return slides;
     }
 
-    // ── Render ──────────────────────────────────────────────────────
+    // ── Build sidebar from slides ───────────────────────────────────
 
-    const slides = buildSlides(PORTFOLIO);
-    let current = 0;
+    function buildSidebar(slides, sidebarEl, onNavigate) {
+      let renderedSections = new Set();
+
+      slides.forEach((slide, i) => {
+        // Section header (render once per unique section)
+        if (slide.section && !renderedSections.has(slide.section)) {
+          renderedSections.add(slide.section);
+          const hdr = document.createElement('div');
+          hdr.className = 'nav-section-label';
+          // For non-company sections (Profile, Education) show the label but no nav item duplication
+          if (slide.section === 'Profile' || slide.section === 'Education') {
+            // skip header — item label is enough
+          } else {
+            hdr.textContent = slide.section;
+            sidebarEl.appendChild(hdr);
+          }
+        }
+
+        const item = document.createElement('div');
+        item.className = 'nav-item' + (slide.isChild ? ' child' : '');
+        item.dataset.index = i;
+
+        const label = document.createTextNode(slide.navLabel);
+        const badge = document.createElement('span');
+        badge.className = 'nav-badge';
+        badge.textContent = i + 1;
+
+        item.appendChild(label);
+        item.appendChild(badge);
+        item.addEventListener('click', () => onNavigate(i));
+        sidebarEl.appendChild(item);
+      });
+    }
+
+    // ── Init ────────────────────────────────────────────────────────
+
+    const slides    = buildSlides(PORTFOLIO);
+    let current     = 0;
 
     const wrapper   = document.getElementById('slides-wrapper');
-    const dotsEl    = document.getElementById('dots');
+    const sidebarEl = document.getElementById('sidebar');
     const counter   = document.getElementById('slide-counter');
     const btnPrev   = document.getElementById('btn-prev');
     const btnNext   = document.getElementById('btn-next');
-    const topName   = document.getElementById('topbar-name');
 
-    topName.textContent = PORTFOLIO.bio.name;
+    document.getElementById('topbar-name').textContent = PORTFOLIO.bio.name;
 
-    // Create slide elements
     slides.forEach((s, i) => {
       const el = document.createElement('div');
       el.className = 'slide' + (i === 0 ? ' active' : '');
@@ -450,22 +410,19 @@
       wrapper.appendChild(el);
     });
 
-    // Create dots
-    slides.forEach((_, i) => {
-      const d = document.createElement('div');
-      d.className = 'dot' + (i === 0 ? ' active' : '');
-      d.addEventListener('click', () => goTo(i));
-      dotsEl.appendChild(d);
-    });
+    buildSidebar(slides, sidebarEl, n => goTo(n));
 
     function goTo(n) {
-      const els  = wrapper.querySelectorAll('.slide');
-      const dots = dotsEl.querySelectorAll('.dot');
-      els[current].classList.remove('active');
-      dots[current].classList.remove('active');
+      const slideEls = wrapper.querySelectorAll('.slide');
+      const navItems = sidebarEl.querySelectorAll('.nav-item');
+
+      slideEls[current].classList.remove('active');
+      navItems[current].classList.remove('active');
       current = n;
-      els[current].classList.add('active');
-      dots[current].classList.add('active');
+      slideEls[current].classList.add('active');
+      navItems[current].classList.add('active');
+      navItems[current].scrollIntoView({ block: 'nearest' });
+
       counter.textContent = `${current + 1} / ${slides.length}`;
       btnPrev.disabled = current === 0;
       btnNext.disabled = current === slides.length - 1;
@@ -475,11 +432,11 @@
     btnNext.addEventListener('click', () => { if (current < slides.length - 1) goTo(current + 1); });
 
     document.addEventListener('keydown', e => {
-      if (e.key === 'ArrowLeft'  && current > 0)               goTo(current - 1);
+      if (e.key === 'ArrowLeft'  && current > 0)                goTo(current - 1);
       if (e.key === 'ArrowRight' && current < slides.length - 1) goTo(current + 1);
     });
 
-    goTo(0); // init
+    goTo(0);
   </script>
 </body>
 </html>
