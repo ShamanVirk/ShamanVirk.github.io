@@ -24,7 +24,7 @@ const PORTFOLIO = {
   skills: [
     {
       category: "Languages & Frameworks",
-      items: ["Java", "JavaScript", "Spring Boot", "Spring Cloud Gateway", "Node.js", "Lambda/Serverless", "GraphQL", "JPA/Hibernate", "Spring Security"]
+      items: ["Java", "JavaScript", "Spring Boot", "Spring Cloud Gateway", "Node.js", "Lambda/Serverless", "GraphQL", "SAP Hybris", "JPA/Hibernate", "Spring Security", "Spring MVC", "Spring Data Solr", "Git", "SVN", "TFS"]
     },
     {
       category: "Cloud & Infrastructure",
@@ -32,7 +32,7 @@ const PORTFOLIO = {
     },
     {
       category: "DevOps",
-      items: ["Jenkins", "Concourse CI", "Maven", "Apache", "Linux"]
+      items: ["Jenkins", "Concourse CI", "Maven", "Ant", "Apache", "Apache Tomcat", "Linux"]
     },
     {
       category: "Observability",
@@ -44,7 +44,7 @@ const PORTFOLIO = {
     },
     {
       category: "Frontend",
-      items: ["Angular", "TypeScript", "RxJs", "NgRx", "SAP Commerce Spartacus", "HTML5"]
+      items: ["Angular", "TypeScript", "RxJs", "NgRx", "SAP Commerce Spartacus", "Thymeleaf", "JSP", "jQuery", "HTML5"]
     },
     {
       category: "Eventing & Messaging",
@@ -136,12 +136,22 @@ const PORTFOLIO = {
       period: "Jul 2011 – May 2014",
       stack: ["Java EE", "C++", "JNI"],
       summary: [
-        "Industrial automation tools for Oil & Gas refineries"
+        "Full-stack software engineer building industrial automation tools for Oil & Gas refineries"
       ],
       detail: [
         "Built industrial automation and data management tools for Oil & Gas sector",
-        "Integrated Java EE with native C++ code via JNI for performance-critical operations"
+        "Integrated Java EE with native C++ code via JNI for performance-critical operations",
+        "Company later became INTECH Process Automation Inc."
       ]
+    }
+  ],
+
+  education: [
+    {
+      degree: "BS (Hons.) in Computer Science",
+      institution: "University of the Punjab",
+      location: "Lahore, Pakistan",
+      year: "2011"
     }
   ]
 };
